@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — ENTRIX</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--black:#000;--white:#fff;--red:#D90429;--rd:#a50320;--g1:#111;--g2:#1a1a1a;--g3:#222;--mid:#888;--light:#ccc;--faint:#2a2a2a;--faint2:#333}
+html{scroll-behavior:smooth}body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+a{text-decoration:none;color:inherit}ul{list-style:none}button{cursor:none;border:none;background:none;font-family:inherit}
+#cur{position:fixed;width:12px;height:12px;background:var(--white);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;mix-blend-mode:difference}
+#cur.big{width:44px;height:44px}#cur.red{background:var(--red);mix-blend-mode:normal;width:36px;height:36px}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:68px;background:rgba(0,0,0,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--faint)}
+.nlogo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.16em;transition:color .2s}.nlogo:hover{color:var(--red)}
+.nlinks{display:flex;gap:32px}.nlinks a{font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--light);transition:color .2s;position:relative}
+.nlinks a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--red);transition:width .2s}
+.nlinks a:hover,.nlinks a.act{color:var(--white)}.nlinks a:hover::after,.nlinks a.act::after{width:100%}
+.nr{display:flex;align-items:center;gap:20px}
+.nic{font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--light);transition:color .2s;display:flex;align-items:center;gap:6px}.nic:hover{color:var(--white)}
+.cc{background:var(--red);color:var(--white);font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.hbg{display:none;flex-direction:column;gap:5px}.hbg span{display:block;width:22px;height:1px;background:var(--white)}
+.ann{background:var(--red);text-align:center;padding:10px;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;margin-top:68px}
+/* SHOP HERO */
+.shero{height:320px;position:relative;overflow:hidden;display:flex;align-items:flex-end}
+.shero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.35)}
+.shero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,transparent 70%)}
+.shcon{position:relative;z-index:2;padding:0 48px 44px;width:100%}
+.sh-bread{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);margin-bottom:12px}
+.sh-bread a{color:var(--mid);transition:color .2s}.sh-bread a:hover{color:var(--white)}
+.sh-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,8vw,96px);letter-spacing:.05em;line-height:.95}
+.sh-sub{font-size:13px;font-weight:300;color:rgba(255,255,255,.5);margin-top:8px;letter-spacing:.04em}
+/* LAYOUT */
+.shop-wrap{display:flex;gap:0;min-height:100vh}
+/* SIDEBAR */
+.sidebar{width:260px;flex-shrink:0;background:var(--g1);border-right:1px solid var(--faint);padding:36px 28px;position:sticky;top:68px;height:calc(100vh - 68px);overflow-y:auto}
+.sidebar::-webkit-scrollbar{width:3px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--faint2);border-radius:2px}
+.sf-title{font-size:10px;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--white);margin-bottom:16px;margin-top:28px}
+.sf-title:first-child{margin-top:0}
+.sf-divider{height:1px;background:var(--faint);margin:20px 0}
+.sf-check{display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:none}
+.sf-check input[type=checkbox]{width:14px;height:14px;accent-color:var(--red);cursor:none}
+.sf-check label{font-size:12px;font-weight:300;color:rgba(255,255,255,.6);cursor:none;transition:color .2s}
+.sf-check:hover label{color:var(--white)}
+.price-range{width:100%;margin:12px 0 6px}
+input[type=range]{width:100%;accent-color:var(--red);cursor:none}
+.price-vals{display:flex;justify-content:space-between;font-size:11px;color:var(--mid)}
+.swatch-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.csw{width:22px;height:22px;border-radius:50%;border:2px solid transparent;transition:border-color .2s;cursor:none}
+.csw.on,.csw:hover{border-color:var(--white)}
+.sf-clear{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-top:24px;cursor:none;transition:color .2s}
+.sf-clear:hover{color:var(--white)}
+/* MAIN */
+.shop-main{flex:1;padding:32px 40px}
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:16px;flex-wrap:wrap}
+.sort-select{background:var(--g1);border:1px solid var(--faint);color:var(--white);font-family:'Barlow',sans-serif;font-size:12px;letter-spacing:.1em;padding:10px 16px;outline:none;cursor:none;transition:border-color .2s}
+.sort-select:focus{border-color:var(--red)}
+.count{font-size:12px;color:var(--mid);letter-spacing:.06em}
+.view-toggle{display:flex;gap:4px}
+.vbtn{width:32px;height:32px;border:1px solid var(--faint);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--mid);transition:all .2s;cursor:none}
+.vbtn.on,.vbtn:hover{border-color:var(--white);color:var(--white)}
+/* FILTER PILLS */
+.active-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--g2);border:1px solid var(--faint2);font-size:10px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--light);padding:6px 12px}
+.pill button{color:var(--mid);font-size:12px;transition:color .2s;cursor:none}.pill button:hover{color:var(--red)}
+/* CAT TABS */
+.cat-tabs{display:flex;gap:0;margin-bottom:28px;overflow-x:auto;border-bottom:1px solid var(--faint)}
+.cat-tabs::-webkit-scrollbar{display:none}
+.ctab{font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);padding:12px 20px;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s;cursor:none}
+.ctab.on,.ctab:hover{color:var(--white)}.ctab.on{border-bottom-color:var(--red)}
+/* PRODUCT GRID */
+.pg4{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.pg3{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.pc{background:var(--g1);cursor:none;position:relative;overflow:hidden}
+.pi{position:relative;overflow:hidden}
+.pi img{width:100%;aspect-ratio:.8;object-fit:cover;transition:transform .7s cubic-bezier(.16,1,.3,1)}
+.pc:hover .pi img{transform:scale(1.06)}
+.pi-hover{position:absolute;inset:0;background:rgba(0,0,0,0);display:flex;flex-direction:column;align-items:stretch;justify-content:flex-end;transition:background .3s}
+.pc:hover .pi-hover{background:rgba(0,0,0,.2)}
+.pa{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.pc:hover .pa{transform:translateY(0)}
+.patc{padding:13px;background:var(--red);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--white);text-align:center;transition:background .2s}
+.patc:hover{background:var(--rd)}
+.pwl{padding:9px;background:rgba(0,0,0,.85);font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--light);text-align:center;cursor:none}
+.pinfo{padding:14px 16px}
+.pn{font-size:13px;font-weight:400;letter-spacing:.04em;color:var(--white);margin-bottom:6px}
+.pm{display:flex;justify-content:space-between;align-items:center}
+.pcat{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mid)}
+.ppri{font-size:14px;font-weight:500;color:var(--white)}
+.pbadge{position:absolute;top:10px;left:10px;background:var(--black);color:var(--white);font-size:8px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:5px 10px;z-index:2}
+.pbadge.sale{background:var(--red)}.pbadge.lim{background:var(--g3);border:1px solid var(--faint2)}
+.psw{display:flex;gap:6px;padding:4px 16px 12px}
+.sw{width:13px;height:13px;border-radius:50%;border:1px solid transparent;transition:border-color .2s;cursor:none}
+.sw.on,.sw:hover{border-color:var(--white)}
+.pwish{position:absolute;top:10px;right:10px;width:32px;height:32px;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--white);opacity:0;transition:opacity .2s;z-index:2;cursor:none}
+.pc:hover .pwish{opacity:1}
+.pwish.liked{opacity:1;color:var(--red)}
+/* PAGINATION */
+.pager{display:flex;justify-content:center;gap:4px;margin-top:48px;padding-bottom:60px}
+.pg-btn{width:40px;height:40px;border:1px solid var(--faint);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;letter-spacing:.06em;color:var(--mid);transition:all .2s;cursor:none}
+.pg-btn.on,.pg-btn:hover{border-color:var(--red);color:var(--red)}
+.pg-btn.arrow{background:var(--red);border-color:var(--red);color:var(--white)}.pg-btn.arrow:hover{background:var(--rd)}
+/* MMENU */
+.mmenu{position:fixed;inset:0;background:var(--black);z-index:400;display:flex;flex-direction:column;justify-content:center;padding:48px;transform:translateX(100%);transition:transform .5s cubic-bezier(.77,0,.18,1)}
+.mmenu.open{transform:translateX(0)}
+.mmenu .mml{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:.14em;margin-bottom:40px}
+.mmlinks{display:flex;flex-direction:column;gap:4px}
+.mmlinks a{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,7vw,52px);letter-spacing:.06em;color:rgba(255,255,255,.15);transition:color .2s}.mmlinks a:hover{color:var(--white)}
+.mmclose{position:absolute;top:28px;right:44px;font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--mid)}
+.toast{position:fixed;bottom:30px;right:30px;background:var(--white);color:var(--black);padding:14px 26px;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;z-index:800;transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.16,1,.3,1)}
+.toast.show{transform:translateY(0);opacity:1}
+/* RESPONSIVE */
+@media(max-width:1200px){.pg4{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.sidebar{display:none}.shop-wrap{flex-direction:column}.shop-main{padding:20px}}
+@media(max-width:768px){nav{padding:0 20px}.nlinks{display:none}.hbg{display:flex}.pg4,.pg3{grid-template-columns:repeat(2,1fr)}.shcon{padding:0 20px 32px}}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div class="mmenu" id="mm"><span class="mmclose" id="mmc">✕</span><div class="mml">ENTRIX</div><nav class="mmlinks"><a href="entrix-home.html">Home</a><a href="entrix-shop.html">Shop</a><a href="#">Story</a><a href="#">Lookbook</a></nav></div>
+<div class="ann">⚡ Free Shipping above ₹4,999 &nbsp;·&nbsp; New Drop: AXIS Collection — Live Now</div>
+<nav>
+  <a href="entrix-home.html" class="nlogo">ENTRIX</a>
+  <div class="nlinks"><a href="entrix-shop.html" class="act">Shop</a><a href="entrix-shop.html">New Drops</a><a href="#">Lookbook</a><a href="#">About</a></div>
+  <div class="nr"><span class="nic">Search</span><span class="nic">Wishlist</span><span class="nic">Bag <span class="cc" id="cc">0</span></span><div class="hbg" id="hbg"><span></span><span></span><span></span></div></div>
+</nav>
+
+<div class="shero">
+  <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&q=80&fit=crop" alt="Shop">
+  <div class="shcon">
+    <p class="sh-bread"><a href="entrix-home.html">Home</a> / Shop</p>
+    <h1 class="sh-title">All Products</h1>
+    <p class="sh-sub">132 pieces — SS'25 Collection</p>
+  </div>
+</div>
+
+<div class="shop-wrap">
+  <!-- SIDEBAR FILTERS -->
+  <aside class="sidebar">
+    <p class="sf-title">Category</p>
+    <div class="sf-check"><input type="checkbox" id="c1" checked><label for="c1">All Products (132)</label></div>
+    <div class="sf-check"><input type="checkbox" id="c2"><label for="c2">Oversized Tees (24)</label></div>
+    <div class="sf-check"><input type="checkbox" id="c3"><label for="c3">Hoodies (18)</label></div>
+    <div class="sf-check"><input type="checkbox" id="c4"><label for="c4">Cargo Pants (16)</label></div>
+    <div class="sf-check"><input type="checkbox" id="c5"><label for="c5">Jackets (12)</label></div>
+    <div class="sf-check"><input type="checkbox" id="c6"><label for="c6">Co-ord Sets (10)</label></div>
+    <div class="sf-check"><input type="checkbox" id="c7"><label for="c7">Sweatshirts (14)</label></div>
+    <div class="sf-check"><input type="checkbox" id="c8"><label for="c8">Accessories (30)</label></div>
+    <div class="sf-check"><input type="checkbox" id="c9"><label for="c9">Sneakers (8)</label></div>
+    <div class="sf-divider"></div>
+
+    <p class="sf-title">Price Range</p>
+    <input type="range" min="0" max="15000" value="15000" id="priceRange" oninput="updatePrice(this.value)" class="price-range">
+    <div class="price-vals"><span>₹0</span><span id="priceVal">₹15,000</span></div>
+    <div class="sf-divider"></div>
+
+    <p class="sf-title">Size</p>
+    <div class="sf-check"><input type="checkbox" id="sxs"><label for="sxs">XS</label></div>
+    <div class="sf-check"><input type="checkbox" id="ss"><label for="ss">S</label></div>
+    <div class="sf-check"><input type="checkbox" id="sm" checked><label for="sm">M</label></div>
+    <div class="sf-check"><input type="checkbox" id="sl"><label for="sl">L</label></div>
+    <div class="sf-check"><input type="checkbox" id="sxl"><label for="sxl">XL</label></div>
+    <div class="sf-check"><input type="checkbox" id="sxxl"><label for="sxxl">XXL</label></div>
+    <div class="sf-divider"></div>
+
+    <p class="sf-title">Color</p>
+    <div class="swatch-row">
+      <div class="csw on" style="background:#111" title="Black"></div>
+      <div class="csw" style="background:#f5f2ed;border:1px solid #444" title="White"></div>
+      <div class="csw" style="background:#D90429" title="Red"></div>
+      <div class="csw" style="background:#1a3a1a" title="Olive"></div>
+      <div class="csw" style="background:#3a3a5a" title="Navy"></div>
+      <div class="csw" style="background:#5a3a1a" title="Brown"></div>
+    </div>
+    <div class="sf-divider"></div>
+
+    <p class="sf-title">Availability</p>
+    <div class="sf-check"><input type="checkbox" id="av1" checked><label for="av1">In Stock</label></div>
+    <div class="sf-check"><input type="checkbox" id="av2"><label for="av2">Pre-Order</label></div>
+    <div class="sf-check"><input type="checkbox" id="av3"><label for="av3">Limited Edition</label></div>
+    <div class="sf-divider"></div>
+
+    <p class="sf-title">Collection</p>
+    <div class="sf-check"><input type="checkbox" id="col1" checked><label for="col1">AXIS Drop SS'25</label></div>
+    <div class="sf-check"><input type="checkbox" id="col2"><label for="col2">Core Essentials</label></div>
+    <div class="sf-check"><input type="checkbox" id="col3"><label for="col3">Void Series</label></div>
+    <div class="sf-check"><input type="checkbox" id="col4"><label for="col4">Signature</label></div>
+
+    <button class="sf-clear" onclick="clearFilters()">Clear All Filters</button>
+  </aside>
+
+  <!-- MAIN SHOP -->
+  <main class="shop-main">
+    <div class="cat-tabs">
+      <div class="ctab on" onclick="setCat(this)">All</div>
+      <div class="ctab" onclick="setCat(this)">New Drops</div>
+      <div class="ctab" onclick="setCat(this)">Tops</div>
+      <div class="ctab" onclick="setCat(this)">Bottoms</div>
+      <div class="ctab" onclick="setCat(this)">Outerwear</div>
+      <div class="ctab" onclick="setCat(this)">Sets</div>
+      <div class="ctab" onclick="setCat(this)">Accessories</div>
+      <div class="ctab" onclick="setCat(this)">Sneakers</div>
+    </div>
+
+    <div class="toolbar">
+      <div style="display:flex;align-items:center;gap:16px">
+        <span class="count">Showing <strong style="color:var(--white)">132</strong> products</span>
+        <div class="active-filters" id="activePills">
+          <div class="pill">Size M <button onclick="removePill(this)">✕</button></div>
+          <div class="pill">In Stock <button onclick="removePill(this)">✕</button></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="view-toggle">
+          <div class="vbtn on" onclick="setView(this,'pg4')" title="4 columns">⊞</div>
+          <div class="vbtn" onclick="setView(this,'pg3')" title="3 columns">⊟</div>
+        </div>
+        <select class="sort-select" onchange="sortChanged(this)">
+          <option>Sort: Featured</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+          <option>Newest First</option>
+          <option>Best Selling</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="pg4" id="prodGrid">
+
+      <div class="pc"><div class="pi"><img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&q=80&fit=crop" alt="Axis Jacket" loading="lazy"><div class="pa"><button class="patc" onclick="atc()">Add to Cart</button><div class="pwl">♡ Wishlist</div></div></div><div class="pbadge sale">Drop</div><div class="pwish" onclick="wish(this)">♡</div><div class="psw"><div class="sw on" style="background:#111"></div><div class="sw" style="background:#3a3a3a"></div></div><div class="pinfo"><p class="pn"><a href="entrix-pdp.html" style="color:inherit">Axis Oversized Jacket — Onyx</a></p><div class="pm"><span class="pcat">Outerwear</span><span class="ppri">₹8,999</span></div></div></div>
+
+      <div class="pc"><div class="pi"><img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&q=80&fit=crop" alt="Cargo" loading="lazy"><div class="pa"><button class="patc" onclick="atc()">Add to Cart</button><div class="pwl">♡ Wishlist</div></div></div><div class="pbadge lim">Limited</div><div class="pwish" onclick="wish(this)">♡</div><div class="psw"><div class="sw on" style="background:#111"></div><div class="sw" style="background:#1a3a1a"></div><div class="sw" style="background:#3a2a1a"></div></div><div class="pinfo"><p class="pn">Void Cargo Trousers — Black</p><div class="pm"><span class="pcat">Bottoms</span><span class="ppri">₹5,499</span></div></div></div>
+
+      <div class="pc"><div class="pi"><img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&q=80&fit=crop" alt="Graphic Tee" loading="lazy"><div class="pa"><button class="patc" onclick="atc()">Add to Cart</button><div class="pwl">♡ Wishlist</div></div></div><div class="pbadge sale">Best Seller</div><div class="pwish" onclick="wish(this)">♡</div><div class="psw"><div class="sw on" style="background:#111"></div><div class="sw" style="background:#f5f2ed;border:1px solid #444"></div><div class="sw" style="background:#D90429"></div></div><div class="pinfo"><p class="pn"><a href="entrix-pdp.html" style="color:inherit">Core Graphic Tee — Vol. 3</a></p><div class="pm"><span class="pcat">Tops</span><span class="ppri">₹2,499</span></div></div></div>
+
+      <div class="pc"><div class="pi"><img src="https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=600&q=80&fit=crop" alt="Hoodie" loading="lazy"><div class="pa"><button class="patc" onclick="atc()">Add to Cart</button><div class="pwl">♡ Wishlist</div></div></div><div class="pbadge">New</div><div class="pwish" onclick="wish(this)">♡</div><div class="psw"><div class="sw on" style="background:#111"></div><div class="sw" style="background:#3a3a3a"></div><div class="sw" style="background:#f5f2ed;border:1px solid #444"></div></div><div class="pinfo"><p class="pn">Signal Heavyweight Hoodie</p><div class="pm"><span class="pcat">Hoodies</span><span class="ppri">₹4,799</span></div></div></div>
+
+      <div class="pc"><div class="pi"><img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&q=80&fit=crop" alt="Coord" loading="lazy"><div class="pa"><button class="patc" onclick="atc()">Add to Cart</button><div class="pwl">♡ Wishlist</div></div></div><div class="pwish" onclick="wish(this)">♡</div><div class="psw"><div class="sw on" style="background:#111"></div><div class="sw" style="background:#f5f2ed;border:1px solid #444"></div></div><div class="pinfo"><p class="pn">Minimal Co-ord Set</p><div class="pm"><span class="pcat">Sets</span><span class="ppri">₹7,299</span></div></div></div>
+
+      <div class="pc"><div class="pi"><img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&q=80&fit=crop" alt="Tee" loading="lazy"><div class="pa"><button class="patc" onclick="atc()">Add to Cart</button><div class="pwl">♡ Wishlist</div></div></div><div class="pbadge">New</div><div class="pwish" onclick="wish(this)">♡</div><div class="psw"><div class="sw on" style="background:#111"></div><div class="sw" style="background:#D90429"></div></div><div class="pinfo"><p class="pn">Minimal Tee — Onyx/Red</p><div class="pm"><span class="pcat">Tops</span><span class="ppri">₹2,199</span></div></div></div>
+
+      <div class="pc"><div class="pi"><img src="https://images.unsplash.com/photo-1523206489230-c012c64b2b48?w=600&q=80&fit=crop" alt="Cap" loading="lazy"><div class="pa"><button class="patc" onclick="atc()">Add to Cart</button><div class="pwl">♡ Wishlist</div></div></div><div class="pwish" onclick="wish(this)">♡</div><div class="pinfo"><p class="pn">Entrix Structured Cap</p><div class="pm"><span class="pcat">Accessories</span><span class="ppri">₹1,499</span></div></div></div>
+
+      <div class="pc"><div class="pi"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80&fit=crop" alt="Sneakers" loading="lazy"><div class="pa"><button class="patc" onclick="atc()">Add to Cart</button><div class="pwl">♡ Wishlist</div></div></div><div class="pbadge lim">Exclusive</div><div class="pwish" onclick="wish(this)">♡</div><div class="pinfo"><p class="pn">Entrix Collab Sneaker — Vol. 1</p><div class="pm"><span class="pcat">Sneakers</span><span class="ppri">₹12,999</span></div></div></div>
+
+      <div class="pc"><div class="pi"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=80&fit=crop" alt="Model" loading="lazy"><div class="pa"><button class="patc" onclick="atc()">Add to Cart</button><div class="pwl">♡ Wishlist</div></div></div><div class="pbadge sale">Drop</div><div class="pwish" onclick="wish(this)">♡</div><div class="psw"><div class="sw on" style="background:#111"></div><div class="sw" style="background:#3a3a3a"></div></div><div class="pinfo"><p class="pn">Zip Hoodie — Stealth</p><div class="pm"><span class="pcat">Hoodies</span><span class="ppri">₹5,299</span></div></div></div>
+
+      <div class="pc"><div class="pi"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=80&fit=crop" alt="Fashion" loading="lazy"><div class="pa"><button class="patc" onclick="atc()">Add to Cart</button><div class="pwl">♡ Wishlist</div></div></div><div class="pwish" onclick="wish(this)">♡</div><div class="psw"><div class="sw on" style="background:#f5f2ed;border:1px solid #444"></div><div class="sw" style="background:#111"></div></div><div class="pinfo"><p class="pn">Techwear Cargo Shorts</p><div class="pm"><span class="pcat">Bottoms</span><span class="ppri">₹3,999</span></div></div></div>
+
+      <div class="pc"><div class="pi"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&q=80&fit=crop" alt="Accessory" loading="lazy"><div class="pa"><button class="patc" onclick="atc()">Add to Cart</button><div class="pwl">♡ Wishlist</div></div></div><div class="pbadge">New</div><div class="pwish" onclick="wish(this)">♡</div><div class="pinfo"><p class="pn">Entrix Tote Bag — Black</p><div class="pm"><span class="pcat">Accessories</span><span class="ppri">₹1,799</span></div></div></div>
+
+      <div class="pc"><div class="pi"><img src="https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=600&q=80&fit=crop" alt="Street Fashion" loading="lazy"><div class="pa"><button class="patc" onclick="atc()">Add to Cart</button><div class="pwl">♡ Wishlist</div></div></div><div class="pbadge lim">Rare</div><div class="pwish" onclick="wish(this)">♡</div><div class="psw"><div class="sw on" style="background:#111"></div></div><div class="pinfo"><p class="pn">Anime Streetwear Tee — Shadow</p><div class="pm"><span class="pcat">Tops</span><span class="ppri">₹2,799</span></div></div></div>
+
+    </div>
+
+    <div class="pager">
+      <div class="pg-btn arrow">←</div>
+      <div class="pg-btn on">1</div>
+      <div class="pg-btn">2</div>
+      <div class="pg-btn">3</div>
+      <div class="pg-btn">4</div>
+      <div class="pg-btn">...</div>
+      <div class="pg-btn">11</div>
+      <div class="pg-btn arrow">→</div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast">✓ Added to Bag</div>
+
+<script>
+const cur=document.getElementById('cur');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px'});
+document.querySelectorAll('a,button,.pc,.ctab,.csw,.sw,.vbtn,.pg-btn,.pwish,.sf-check,.sf-clear').forEach(el=>{el.addEventListener('mouseenter',()=>cur.classList.add('big'));el.addEventListener('mouseleave',()=>cur.classList.remove('big'))});
+document.querySelectorAll('.patc,.btn-r').forEach(el=>{el.addEventListener('mouseenter',()=>{cur.classList.remove('big');cur.classList.add('red')});el.addEventListener('mouseleave',()=>cur.classList.remove('red'))});
+document.getElementById('hbg').onclick=()=>document.getElementById('mm').classList.add('open');
+document.getElementById('mmc').onclick=()=>document.getElementById('mm').classList.remove('open');
+function setCat(el){document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('on'));el.classList.add('on')}
+function setView(el,cls){document.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('on'));el.classList.add('on');const g=document.getElementById('prodGrid');g.className=cls}
+function removePill(btn){btn.closest('.pill').remove()}
+function clearFilters(){document.querySelectorAll('.sf-check input').forEach(i=>i.checked=false);document.getElementById('activePills').innerHTML='';document.getElementById('priceRange').value=15000;document.getElementById('priceVal').textContent='₹15,000'}
+function updatePrice(v){document.getElementById('priceVal').textContent='₹'+Number(v).toLocaleString('en-IN')}
+function sortChanged(s){console.log('Sort:',s.value)}
+let cart=0;
+function atc(){cart++;document.getElementById('cc').textContent=cart;const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function wish(el){el.classList.toggle('liked');el.textContent=el.classList.contains('liked')?'♥':'♡'}
+document.querySelectorAll('.csw').forEach(s=>s.addEventListener('click',()=>{s.closest('.swatch-row').querySelectorAll('.csw').forEach(x=>x.classList.remove('on'));s.classList.add('on')}));
+document.querySelectorAll('.sw').forEach(s=>s.addEventListener('click',()=>{s.closest('.psw').querySelectorAll('.sw').forEach(x=>x.classList.remove('on'));s.classList.add('on')}));
+</script>
+</body>
+</html>

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Axis Oversized Jacket — ENTRIX</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--black:#000;--white:#fff;--red:#D90429;--rd:#a50320;--g1:#111;--g2:#1a1a1a;--g3:#222;--mid:#888;--light:#ccc;--faint:#2a2a2a;--faint2:#333}
+html{scroll-behavior:smooth}body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+a{text-decoration:none;color:inherit}ul{list-style:none}button{cursor:none;border:none;background:none;font-family:inherit}
+#cur{position:fixed;width:12px;height:12px;background:var(--white);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;mix-blend-mode:difference}
+#cur.big{width:44px;height:44px}#cur.red{background:var(--red);mix-blend-mode:normal;width:36px;height:36px}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:68px;background:rgba(0,0,0,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--faint)}
+.nlogo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.16em;transition:color .2s}.nlogo:hover{color:var(--red)}
+.nlinks{display:flex;gap:32px}.nlinks a{font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--light);transition:color .2s;position:relative}
+.nlinks a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--red);transition:width .2s}
+.nlinks a:hover{color:var(--white)}.nlinks a:hover::after{width:100%}
+.nr{display:flex;align-items:center;gap:20px}
+.nic{font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--light);transition:color .2s;display:flex;align-items:center;gap:6px}.nic:hover{color:var(--white)}
+.cc{background:var(--red);color:var(--white);font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.hbg{display:none;flex-direction:column;gap:5px}.hbg span{display:block;width:22px;height:1px;background:var(--white)}
+.ann{background:var(--red);text-align:center;padding:9px;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;margin-top:68px}
+/* BREADCRUMB */
+.bread{padding:20px 48px;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);display:flex;align-items:center;gap:8px}
+.bread a{color:var(--mid);transition:color .2s}.bread a:hover{color:var(--white)}.bread span{color:var(--faint2)}
+
+/* PDP LAYOUT */
+.pdp{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:90vh}
+
+/* GALLERY */
+.gallery{position:sticky;top:68px;height:calc(100vh - 68px);display:grid;grid-template-columns:80px 1fr;gap:0;background:var(--g1)}
+.thumbs{display:flex;flex-direction:column;gap:2px;padding:16px 0 16px 16px;overflow-y:auto}
+.thumbs::-webkit-scrollbar{width:0}
+.thumb{width:64px;height:80px;overflow:hidden;cursor:none;border:2px solid transparent;transition:border-color .2s;flex-shrink:0}
+.thumb.active{border-color:var(--red)}
+.thumb img{width:100%;height:100%;object-fit:cover;transition:opacity .2s}
+.thumb:not(.active) img{opacity:.55}
+.thumb:hover img{opacity:1}
+.main-img{position:relative;overflow:hidden;background:var(--g2)}
+.main-img img{width:100%;height:100%;object-fit:cover;transition:opacity .4s ease}
+.main-img img.fade{opacity:0}
+.zoom-hint{position:absolute;bottom:16px;right:16px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);background:rgba(0,0,0,.6);padding:6px 12px;backdrop-filter:blur(8px)}
+.badge-stack{position:absolute;top:16px;left:16px;display:flex;flex-direction:column;gap:6px}
+.pdp-badge{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:5px 10px;background:var(--red);color:var(--white)}
+.pdp-badge.blk{background:var(--black)}
+.share-btn{position:absolute;top:16px;right:16px;width:36px;height:36px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--white);cursor:none;transition:background .2s}
+.share-btn:hover{background:var(--red)}
+
+/* PRODUCT INFO */
+.pinfo-wrap{padding:48px 52px;overflow-y:auto;max-height:calc(100vh - 68px)}
+.pinfo-wrap::-webkit-scrollbar{width:3px}.pinfo-wrap::-webkit-scrollbar-track{background:transparent}.pinfo-wrap::-webkit-scrollbar-thumb{background:var(--faint2)}
+.p-cat{font-size:10px;font-weight:600;letter-spacing:.35em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.p-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,4vw,58px);letter-spacing:.04em;line-height:.95;color:var(--white);margin-bottom:6px}
+.p-sub{font-size:13px;font-weight:300;color:var(--mid);letter-spacing:.06em;margin-bottom:20px}
+/* RATING */
+.rating-row{display:flex;align-items:center;gap:10px;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--faint)}
+.stars{display:flex;gap:2px}.star{color:var(--red);font-size:13px}
+.r-count{font-size:12px;color:var(--mid);letter-spacing:.04em;border-bottom:1px solid var(--faint2);cursor:none}
+.r-count:hover{color:var(--white);border-color:var(--white)}
+.r-verified{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--mid)}
+/* PRICE */
+.price-row{display:flex;align-items:baseline;gap:12px;margin-bottom:8px}
+.p-price{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:.04em;color:var(--white)}
+.p-og{font-size:18px;color:var(--mid);text-decoration:line-through;font-weight:300}
+.p-save{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--red);background:rgba(217,4,41,.12);padding:4px 10px}
+.p-tax{font-size:11px;color:var(--mid);letter-spacing:.06em;margin-bottom:24px}
+/* COLOR */
+.option-label{font-size:11px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--white);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.option-label span{font-weight:300;color:var(--mid);letter-spacing:normal;text-transform:none;font-size:12px}
+.color-opts{display:flex;gap:10px;margin-bottom:28px}
+.col-opt{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:none}
+.col-swatch{width:36px;height:36px;border-radius:50%;border:2px solid transparent;transition:all .2s;position:relative}
+.col-opt.active .col-swatch,.col-swatch:hover{border-color:var(--white);transform:scale(1.1)}
+.col-opt.active .col-swatch::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--white);text-shadow:0 1px 2px rgba(0,0,0,.8)}
+.col-name{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--mid)}
+/* SIZE */
+.size-opts{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:8px}
+.sz{height:44px;border:1px solid var(--faint2);font-size:12px;font-weight:500;letter-spacing:.06em;color:var(--mid);display:flex;align-items:center;justify-content:center;transition:all .2s;cursor:none;position:relative}
+.sz:hover:not(.out){border-color:var(--white);color:var(--white)}
+.sz.active{border-color:var(--white);background:var(--white);color:var(--black)}
+.sz.out{opacity:.3;cursor:not-allowed}
+.sz.out::after{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--faint2);transform:rotate(-15deg)}
+.size-guide{font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:24px;cursor:none;transition:color .2s}
+.size-guide:hover{color:var(--white)}
+/* QTY */
+.qty-row{display:flex;align-items:center;gap:0;margin-bottom:20px}
+.qty-btn{width:44px;height:44px;border:1px solid var(--faint2);font-size:18px;font-weight:300;color:var(--white);display:flex;align-items:center;justify-content:center;transition:border-color .2s;cursor:none}
+.qty-btn:hover{border-color:var(--white)}
+.qty-val{width:60px;height:44px;border-top:1px solid var(--faint2);border-bottom:1px solid var(--faint2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:var(--white)}
+/* ACTIONS */
+.actions{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.btn-atc{padding:17px;background:var(--red);font-size:12px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--white);text-align:center;transition:background .2s;cursor:none}
+.btn-atc:hover{background:var(--rd)}
+.btn-bn{padding:16px;border:1px solid rgba(255,255,255,.3);font-size:12px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--white);text-align:center;transition:all .2s;cursor:none}
+.btn-bn:hover{border-color:var(--white);background:var(--white);color:var(--black)}
+.btn-wl{padding:14px;border:1px solid var(--faint2);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);text-align:center;transition:all .2s;cursor:none;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-wl:hover{border-color:var(--red);color:var(--red)}
+.btn-wl.liked{border-color:var(--red);color:var(--red)}
+/* PERKS */
+.perks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;padding:20px;background:var(--g1);border:1px solid var(--faint)}
+.perk{display:flex;align-items:center;gap:10px}
+.perk-icon{width:28px;height:28px;background:rgba(217,4,41,.12);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.perk-text{font-size:11px;font-weight:300;color:rgba(255,255,255,.6);line-height:1.4}
+.perk-text strong{display:block;font-weight:500;color:var(--white);font-size:12px;margin-bottom:1px}
+/* ACCORDION */
+.acc-item{border-bottom:1px solid var(--faint)}
+.acc-head{display:flex;justify-content:space-between;align-items:center;padding:16px 0;cursor:none;transition:color .2s}
+.acc-head:hover{color:var(--light)}
+.acc-title{font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--white)}
+.acc-icon{font-size:18px;color:var(--mid);transition:transform .3s,color .3s;line-height:1}
+.acc-item.open .acc-icon{transform:rotate(45deg);color:var(--red)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1)}
+.acc-item.open .acc-body{max-height:400px}
+.acc-content{padding:0 0 20px;font-size:13px;font-weight:300;color:rgba(255,255,255,.55);line-height:1.85}
+.acc-content ul{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.acc-content ul li::before{content:'—';margin-right:8px;color:var(--red)}
+/* SIZE GUIDE MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:600;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(8px)}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal{background:var(--g1);border:1px solid var(--faint);max-width:640px;width:92%;padding:40px;position:relative;transform:translateY(20px);transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.modal-bg.open .modal{transform:translateY(0)}
+.modal h3{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:.08em;margin-bottom:24px;color:var(--white)}
+.modal-close{position:absolute;top:20px;right:20px;font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);cursor:none;transition:color .2s}
+.modal-close:hover{color:var(--red)}
+.size-table{width:100%;border-collapse:collapse}
+.size-table th{font-size:10px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--red);padding:10px 12px;border-bottom:1px solid var(--faint);text-align:left}
+.size-table td{font-size:13px;font-weight:300;color:rgba(255,255,255,.65);padding:10px 12px;border-bottom:1px solid var(--faint)}
+.size-table tr:hover td{color:var(--white);background:rgba(255,255,255,.03)}
+/* RELATED */
+.related{padding:60px 48px;background:var(--g2);border-top:1px solid var(--faint)}
+.rel-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,4vw,52px);letter-spacing:.05em;margin-bottom:8px}
+.rel-sub{font-size:12px;color:var(--mid);letter-spacing:.08em;margin-bottom:36px}
+.rel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.rc{background:var(--g1);cursor:none;position:relative;overflow:hidden}
+.ri{height:280px;overflow:hidden;position:relative}
+.ri img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.rc:hover .ri img{transform:scale(1.06)}
+.rpa{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.rc:hover .rpa{transform:translateY(0)}
+.rpatc{padding:11px;background:var(--red);font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--white);text-align:center}
+.rinf{padding:14px 14px 16px}
+.rn{font-size:13px;font-weight:400;color:var(--white);margin-bottom:4px}
+.rm{display:flex;justify-content:space-between}
+.rpcat{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--mid)}
+.rppri{font-size:13px;font-weight:500;color:var(--white)}
+/* REVIEWS SECTION */
+.reviews-sec{padding:60px 48px;background:var(--black)}
+.rev-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px}
+.rev-summary{display:flex;align-items:center;gap:28px;margin-bottom:40px;padding:28px;background:var(--g1);border:1px solid var(--faint)}
+.rev-big{font-family:'Bebas Neue',sans-serif;font-size:72px;letter-spacing:.04em;color:var(--white);line-height:1}
+.rev-stars-big{display:flex;gap:4px;margin-bottom:4px}
+.rev-bars{flex:1}
+.rev-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.rev-bar-label{font-size:11px;color:var(--mid);width:24px;text-align:right}
+.rev-bar{flex:1;height:4px;background:var(--faint);position:relative;overflow:hidden}
+.rev-bar-fill{height:100%;background:var(--red);transition:width 1s ease}
+.rev-bar-count{font-size:11px;color:var(--mid);width:28px}
+.rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.rev-card{background:var(--g1);padding:24px;border:1px solid var(--faint);transition:border-color .3s}
+.rev-card:hover{border-color:rgba(217,4,41,.3)}
+.rcs{display:flex;gap:3px;margin-bottom:10px}
+.rct{font-size:13px;font-weight:300;line-height:1.8;color:rgba(255,255,255,.6);margin-bottom:14px;font-style:italic}
+.rca{display:flex;align-items:center;gap:10px}
+.rcav{width:36px;height:36px;border-radius:50%;background:var(--g3);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px}
+.rcn{font-size:12px;font-weight:500;color:var(--white)}.rctag{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--red);margin-top:1px}
+/* TOAST */
+.toast{position:fixed;bottom:30px;right:30px;background:var(--white);color:var(--black);padding:16px 28px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;z-index:800;transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.16,1,.3,1);display:flex;align-items:center;gap:10px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-img{width:40px;height:40px;object-fit:cover}
+/* MMENU */
+.mmenu{position:fixed;inset:0;background:var(--black);z-index:400;display:flex;flex-direction:column;justify-content:center;padding:48px;transform:translateX(100%);transition:transform .5s cubic-bezier(.77,0,.18,1)}
+.mmenu.open{transform:translateX(0)}
+.mmenu .mml{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:.14em;margin-bottom:40px}
+.mmlinks{display:flex;flex-direction:column;gap:4px}
+.mmlinks a{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,7vw,52px);letter-spacing:.06em;color:rgba(255,255,255,.15);transition:color .2s}.mmlinks a:hover{color:var(--white)}
+.mmclose{position:absolute;top:28px;right:44px;font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--mid)}
+/* RESPONSIVE */
+@media(max-width:1100px){.rel-grid{grid-template-columns:repeat(2,1fr)}.rev-grid{grid-template-columns:1fr}}
+@media(max-width:900px){.pdp{grid-template-columns:1fr}.gallery{position:relative;height:auto;grid-template-columns:60px 1fr;top:0}.main-img{height:480px}.pinfo-wrap{max-height:none;padding:32px 24px}}
+@media(max-width:768px){nav{padding:0 20px}.nlinks{display:none}.hbg{display:flex}.bread{padding:14px 20px}.related,.reviews-sec{padding:40px 20px}.rel-grid{grid-template-columns:1fr 1fr}.size-opts{grid-template-columns:repeat(4,1fr)}.perks{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div class="mmenu" id="mm"><span class="mmclose" id="mmc">✕</span><div class="mml">ENTRIX</div><nav class="mmlinks"><a href="entrix-home.html">Home</a><a href="entrix-shop.html">Shop</a><a href="#">Story</a><a href="#">Lookbook</a></nav></div>
+
+<!-- SIZE GUIDE MODAL -->
+<div class="modal-bg" id="sizeModal">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModal()">✕ Close</span>
+    <h3>Size Guide</h3>
+    <p style="font-size:13px;color:var(--mid);margin-bottom:20px;font-weight:300">Measurements in centimetres. For an oversized fit, size up.</p>
+    <table class="size-table">
+      <tr><th>Size</th><th>Chest</th><th>Shoulder</th><th>Length</th><th>Sleeve</th></tr>
+      <tr><td>XS</td><td>96–100</td><td>44</td><td>68</td><td>62</td></tr>
+      <tr><td>S</td><td>100–104</td><td>46</td><td>70</td><td>63</td></tr>
+      <tr><td>M</td><td>104–108</td><td>48</td><td>72</td><td>64</td></tr>
+      <tr><td>L</td><td>108–114</td><td>50</td><td>74</td><td>65</td></tr>
+      <tr><td>XL</td><td>114–120</td><td>52</td><td>76</td><td>66</td></tr>
+      <tr><td>XXL</td><td>120–128</td><td>54</td><td>78</td><td>67</td></tr>
+    </table>
+    <p style="font-size:11px;color:var(--mid);margin-top:20px;letter-spacing:.04em;line-height:1.6">Kai is 185cm and wears size M in this jacket. This piece is intentionally oversized — the dropped shoulders and relaxed body are part of the design.</p>
+  </div>
+</div>
+
+<div class="ann">⚡ Free Shipping above ₹4,999 &nbsp;·&nbsp; Ships within 2–4 business days</div>
+<nav>
+  <a href="entrix-home.html" class="nlogo">ENTRIX</a>
+  <div class="nlinks"><a href="entrix-shop.html">Shop</a><a href="entrix-shop.html">New Drops</a><a href="#">Lookbook</a><a href="#">About</a></div>
+  <div class="nr"><span class="nic">Search</span><span class="nic">Wishlist</span><span class="nic">Bag <span class="cc" id="cc">0</span></span><div class="hbg" id="hbg"><span></span><span></span><span></span></div></div>
+</nav>
+
+<div class="bread"><a href="entrix-home.html">Home</a><span>/</span><a href="entrix-shop.html">Shop</a><span>/</span><a href="entrix-shop.html">Outerwear</a><span>/</span>Axis Oversized Jacket</div>
+
+<div class="pdp">
+  <!-- GALLERY -->
+  <div class="gallery">
+    <div class="thumbs" id="thumbs">
+      <div class="thumb active" onclick="switchImg(0,this)"><img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&q=80&fit=crop" alt="Front"></div>
+      <div class="thumb" onclick="switchImg(1,this)"><img src="https://images.unsplash.com/photo-1548126032-079a0fb0099d?w=300&q=80&fit=crop" alt="Back"></div>
+      <div class="thumb" onclick="switchImg(2,this)"><img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=300&q=80&fit=crop" alt="Detail"></div>
+      <div class="thumb" onclick="switchImg(3,this)"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&q=80&fit=crop" alt="Worn"></div>
+      <div class="thumb" onclick="switchImg(4,this)"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&q=80&fit=crop" alt="Styled"></div>
+    </div>
+    <div class="main-img">
+      <img id="mainImg" src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=1000&q=90&fit=crop" alt="Axis Jacket Main">
+      <div class="badge-stack">
+        <div class="pdp-badge">Drop of Week</div>
+        <div class="pdp-badge blk">SS'25</div>
+      </div>
+      <div class="share-btn" title="Share">↗</div>
+      <div class="zoom-hint">Hover to zoom</div>
+    </div>
+  </div>
+
+  <!-- PRODUCT INFO -->
+  <div class="pinfo-wrap">
+    <p class="p-cat">Outerwear — AXIS Collection</p>
+    <h1 class="p-name">Axis Oversized<br>Jacket</h1>
+    <p class="p-sub">Drop of the Week · Onyx Black · Limited Run</p>
+
+    <div class="rating-row">
+      <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+      <span class="r-count" onclick="document.querySelector('.reviews-sec').scrollIntoView({behavior:'smooth'})">4.9 (147 reviews)</span>
+      <span class="r-verified">· Verified purchases</span>
+    </div>
+
+    <div class="price-row">
+      <div class="p-price">₹8,999</div>
+      <div class="p-og">₹11,999</div>
+      <div class="p-save">Save 25%</div>
+    </div>
+    <p class="p-tax">Inclusive of all taxes. Free shipping above ₹4,999.</p>
+
+    <!-- COLOR -->
+    <p class="option-label">Color <span id="colorName">Onyx Black</span></p>
+    <div class="color-opts" id="colorOpts">
+      <div class="col-opt active" onclick="setColor(this,'Onyx Black')"><div class="col-swatch" style="background:#111;border:1px solid #333"></div><span class="col-name">Onyx</span></div>
+      <div class="col-opt" onclick="setColor(this,'Graphite Grey')"><div class="col-swatch" style="background:#444"></div><span class="col-name">Graphite</span></div>
+      <div class="col-opt" onclick="setColor(this,'Bone White')"><div class="col-swatch" style="background:#f0ede6;border:1px solid #555"></div><span class="col-name">Bone</span></div>
+      <div class="col-opt" onclick="setColor(this,'Crimson Red')"><div class="col-swatch" style="background:#D90429"></div><span class="col-name">Crimson</span></div>
+    </div>
+
+    <!-- SIZE -->
+    <p class="option-label">Size <span id="sizeChosen">— Select a size</span></p>
+    <div class="size-opts" id="sizeOpts">
+      <div class="sz out" onclick="selSz(this)">XS</div>
+      <div class="sz" onclick="selSz(this)">S</div>
+      <div class="sz" onclick="selSz(this)">M</div>
+      <div class="sz" onclick="selSz(this)">L</div>
+      <div class="sz" onclick="selSz(this)">XL</div>
+      <div class="sz out" onclick="selSz(this)">XXL</div>
+    </div>
+    <div class="size-guide" onclick="openModal()">📐 View Size Guide</div>
+
+    <!-- QTY -->
+    <p class="option-label" style="margin-bottom:10px">Quantity</p>
+    <div class="qty-row" style="margin-bottom:24px">
+      <div class="qty-btn" onclick="changeQty(-1)">−</div>
+      <div class="qty-val" id="qtyVal">1</div>
+      <div class="qty-btn" onclick="changeQty(1)">+</div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions">
+      <button class="btn-atc" onclick="atc()">Add to Bag</button>
+      <button class="btn-bn" onclick="buyNow()">Buy Now — ₹8,999</button>
+      <button class="btn-wl" id="wlBtn" onclick="toggleWish()">♡ &nbsp;Add to Wishlist</button>
+    </div>
+
+    <!-- PERKS -->
+    <div class="perks">
+      <div class="perk"><div class="perk-icon">🚚</div><div class="perk-text"><strong>Free Delivery</strong>On orders above ₹4,999</div></div>
+      <div class="perk"><div class="perk-icon">↩</div><div class="perk-text"><strong>Easy Returns</strong>7-day return policy</div></div>
+      <div class="perk"><div class="perk-icon">🔒</div><div class="perk-text"><strong>Secure Checkout</strong>256-bit SSL encrypted</div></div>
+      <div class="perk"><div class="perk-icon">🧵</div><div class="perk-text"><strong>Premium Fabric</strong>400GSM heavyweight cotton</div></div>
+    </div>
+
+    <!-- ACCORDIONS -->
+    <div class="acc-item open" id="acc0">
+      <div class="acc-head" onclick="toggleAcc(0)"><span class="acc-title">Product Details</span><span class="acc-icon">+</span></div>
+      <div class="acc-body"><div class="acc-content">
+        <p>The Axis Jacket is the centrepiece of the SS'25 drop — engineered for structure, designed for movement. An exaggerated silhouette with dropped shoulders, dual chest pockets, and a clean back seam that gives it a tailored edge without sacrificing comfort.</p>
+        <ul>
+          <li>400GSM heavyweight cotton blend</li>
+          <li>Dropped shoulder construction</li>
+          <li>Dual welt chest pockets</li>
+          <li>Interior zip pocket</li>
+          <li>Brushed metal Entrix hardware</li>
+          <li>Oversized fit — true to our standard sizing</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="acc-item" id="acc1">
+      <div class="acc-head" onclick="toggleAcc(1)"><span class="acc-title">Material & Care</span><span class="acc-icon">+</span></div>
+      <div class="acc-body"><div class="acc-content">
+        <ul>
+          <li>80% Premium Cotton, 20% Recycled Polyester</li>
+          <li>Machine wash cold, gentle cycle</li>
+          <li>Do not tumble dry — hang dry recommended</li>
+          <li>Iron on low heat, inside out</li>
+          <li>Do not bleach or dry clean</li>
+        </ul>
+        <p style="margin-top:12px">Fabric sourced from certified sustainable mills. Each jacket uses approximately 1.2kg of raw material with less than 3% waste in our zero-cut production process.</p>
+      </div></div>
+    </div>
+
+    <div class="acc-item" id="acc2">
+      <div class="acc-head" onclick="toggleAcc(2)"><span class="acc-title">Shipping & Returns</span><span class="acc-icon">+</span></div>
+      <div class="acc-body"><div class="acc-content">
+        <ul>
+          <li>Standard delivery: 5–7 business days</li>
+          <li>Express delivery: 2–3 business days (₹199 extra)</li>
+          <li>Free shipping on all orders above ₹4,999</li>
+          <li>Ships from Ahmedabad, Gujarat</li>
+          <li>Returns accepted within 7 days of delivery</li>
+          <li>Items must be unworn, unwashed, with tags attached</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="acc-item" id="acc3">
+      <div class="acc-head" onclick="toggleAcc(3)"><span class="acc-title">Styling Notes</span><span class="acc-icon">+</span></div>
+      <div class="acc-body"><div class="acc-content">
+        <p>The Axis Jacket was styled with the Void Cargo Trousers and Core Graphic Tee for the campaign shoot. It works equally well layered over a heavyweight hoodie for winter or thrown over a minimal tee in the transition months.</p>
+        <ul>
+          <li>Pairs with: Void Cargo, Techwear Shorts</li>
+          <li>Layer under: nothing — this is the statement</li>
+          <li>Footwear: chunky sneakers or clean white runners</li>
+        </ul>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- RELATED -->
+<div class="related">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:8px">
+    <div><p style="font-size:10px;font-weight:600;letter-spacing:.35em;text-transform:uppercase;color:var(--red);margin-bottom:8px">You May Also Like</p><h2 class="rel-title">Complete the Look</h2></div>
+    <a href="entrix-shop.html" style="font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);border-bottom:1px solid var(--faint2);padding-bottom:3px;transition:color .2s,border-color .2s" onmouseover="this.style.color='#fff';this.style.borderColor='#fff'" onmouseout="this.style.color='';this.style.borderColor=''">View All →</a>
+  </div>
+  <p class="rel-sub">Curated to pair with this piece</p>
+  <div class="rel-grid">
+    <div class="rc"><div class="ri"><img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=500&q=80&fit=crop" alt="Cargo" loading="lazy"><div class="rpa"><button class="rpatc" onclick="atc()">Add to Cart</button></div></div><div class="rinf"><p class="rn">Void Cargo Trousers</p><div class="rm"><span class="rpcat">Bottoms</span><span class="rppri">₹5,499</span></div></div></div>
+    <div class="rc"><div class="ri"><img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=500&q=80&fit=crop" alt="Tee" loading="lazy"><div class="rpa"><button class="rpatc" onclick="atc()">Add to Cart</button></div></div><div class="rinf"><p class="rn">Core Graphic Tee — Vol. 3</p><div class="rm"><span class="rpcat">Tops</span><span class="rppri">₹2,499</span></div></div></div>
+    <div class="rc"><div class="ri"><img src="https://images.unsplash.com/photo-1523206489230-c012c64b2b48?w=500&q=80&fit=crop" alt="Cap" loading="lazy"><div class="rpa"><button class="rpatc" onclick="atc()">Add to Cart</button></div></div><div class="rinf"><p class="rn">Entrix Structured Cap</p><div class="rm"><span class="rpcat">Accessories</span><span class="rppri">₹1,499</span></div></div></div>
+    <div class="rc"><div class="ri"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80&fit=crop" alt="Sneakers" loading="lazy"><div class="rpa"><button class="rpatc" onclick="atc()">Add to Cart</button></div></div><div class="rinf"><p class="rn">Entrix Collab Sneaker</p><div class="rm"><span class="rpcat">Sneakers</span><span class="rppri">₹12,999</span></div></div></div>
+  </div>
+</div>
+
+<!-- REVIEWS -->
+<div class="reviews-sec">
+  <div class="rev-header">
+    <div><p style="font-size:10px;font-weight:600;letter-spacing:.35em;text-transform:uppercase;color:var(--red);margin-bottom:8px">Social Proof</p><h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,4vw,52px);letter-spacing:.05em">Customer Reviews</h2></div>
+    <button class="btn-atc" style="padding:13px 28px;font-size:10px">Write a Review</button>
+  </div>
+  <div class="rev-summary">
+    <div style="text-align:center;padding-right:28px;border-right:1px solid var(--faint)">
+      <div class="rev-big">4.9</div>
+      <div class="rev-stars-big"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+      <p style="font-size:11px;color:var(--mid);letter-spacing:.1em">147 reviews</p>
+    </div>
+    <div class="rev-bars">
+      <div class="rev-bar-row"><span class="rev-bar-label">5</span><div class="rev-bar"><div class="rev-bar-fill" style="width:88%"></div></div><span class="rev-bar-count">129</span></div>
+      <div class="rev-bar-row"><span class="rev-bar-label">4</span><div class="rev-bar"><div class="rev-bar-fill" style="width:8%"></div></div><span class="rev-bar-count">12</span></div>
+      <div class="rev-bar-row"><span class="rev-bar-label">3</span><div class="rev-bar"><div class="rev-bar-fill" style="width:3%"></div></div><span class="rev-bar-count">4</span></div>
+      <div class="rev-bar-row"><span class="rev-bar-label">2</span><div class="rev-bar"><div class="rev-bar-fill" style="width:1%"></div></div><span class="rev-bar-count">1</span></div>
+      <div class="rev-bar-row"><span class="rev-bar-label">1</span><div class="rev-bar"><div class="rev-bar-fill" style="width:1%"></div></div><span class="rev-bar-count">1</span></div>
+    </div>
+    <div style="padding-left:28px;border-left:1px solid var(--faint);display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:12px;color:rgba(255,255,255,.5)"><span style="color:var(--red);font-weight:600">96%</span> recommend this product</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.5)">Fit: <span style="color:var(--white)">True to size</span></div>
+      <div style="font-size:12px;color:rgba(255,255,255,.5)">Quality: <span style="color:var(--white)">Excellent</span></div>
+    </div>
+  </div>
+  <div class="rev-grid">
+    <div class="rev-card"><div class="rcs"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div><p class="rct">"The Axis Jacket is on par with Fear of God but at a fraction of the price. The quality is absolutely insane — the weight, the stitching, the hardware. I get stopped every time I wear it."</p><div class="rca"><div class="rcav">AR</div><div><p class="rcn">Aryan R. — Mumbai</p><p class="rctag">Verified Buyer · Size M</p></div></div></div>
+    <div class="rev-card"><div class="rcs"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div><p class="rct">"Ordered the Onyx. The dropped shoulders and the way it drapes is exactly what I was looking for. Paired it with the Void Cargo and it's the best fit I've put together in years."</p><div class="rca"><div class="rcav">KP</div><div><p class="rcn">Krish P. — Bangalore</p><p class="rctag">Verified Buyer · Size L</p></div></div></div>
+    <div class="rev-card"><div class="rcs"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div><p class="rct">"First Indian brand that actually delivers on premium streetwear. The fabric feels luxurious and the fit is perfect for the oversized look without looking sloppy."</p><div class="rca"><div class="rcav">SM</div><div><p class="rcn">Sneha M. — Delhi</p><p class="rctag">Verified Buyer · Size S</p></div></div></div>
+    <div class="rev-card"><div class="rcs"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div><p class="rct">"Honestly wasn't sure about dropping ₹9k on a jacket from a new brand. Was completely wrong to doubt it. This is the best piece in my wardrobe now. Already eyeing the Bone colourway."</p><div class="rca"><div class="rcav">RJ</div><div><p class="rcn">Rohit J. — Ahmedabad</p><p class="rctag">Verified Buyer · Size M</p></div></div></div>
+  </div>
+</div>
+
+<!-- FOOTER MINI -->
+<div style="background:var(--g2);border-top:1px solid var(--faint);padding:20px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+  <a href="entrix-home.html" style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.14em;color:var(--white)">ENTRIX</a>
+  <div style="display:flex;gap:24px"><a href="entrix-shop.html" style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color=''">Shop</a><a href="#" style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color=''">Returns</a><a href="#" style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color=''">Contact</a></div>
+  <p style="font-size:11px;color:rgba(255,255,255,.2)">© 2025 Entrix</p>
+</div>
+
+<div class="toast" id="toast">
+  <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=80&q=80&fit=crop" alt="" class="toast-img">
+  <div><div>Added to Bag ✓</div><div style="font-size:9px;font-weight:400;letter-spacing:.1em;color:#555;margin-top:2px">Axis Jacket — Onyx</div></div>
+</div>
+
+<script>
+// CURSOR
+const cur=document.getElementById('cur');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px'});
+document.querySelectorAll('a,button,.thumb,.sz,.col-opt,.qty-btn,.acc-head,.rc,.rev-card,.modal-close,.size-guide,.share-btn').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('big'));el.addEventListener('mouseleave',()=>cur.classList.remove('big'))
+});
+document.querySelectorAll('.btn-atc,.rpatc').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.classList.remove('big');cur.classList.add('red')});
+  el.addEventListener('mouseleave',()=>cur.classList.remove('red'))
+});
+// NAV
+document.getElementById('hbg').onclick=()=>document.getElementById('mm').classList.add('open');
+document.getElementById('mmc').onclick=()=>document.getElementById('mm').classList.remove('open');
+
+// GALLERY
+const imgs=[
+  'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=1000&q=90&fit=crop',
+  'https://images.unsplash.com/photo-1548126032-079a0fb0099d?w=1000&q=90&fit=crop',
+  'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=1000&q=90&fit=crop',
+  'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1000&q=90&fit=crop',
+  'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1000&q=90&fit=crop',
+];
+function switchImg(i,el){
+  const mi=document.getElementById('mainImg');
+  mi.classList.add('fade');
+  setTimeout(()=>{mi.src=imgs[i];mi.classList.remove('fade')},300);
+  document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// COLOR
+function setColor(el,name){
+  document.querySelectorAll('.col-opt').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('colorName').textContent=name;
+}
+
+// SIZE
+let chosenSz=null;
+function selSz(el){
+  if(el.classList.contains('out'))return;
+  document.querySelectorAll('.sz').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  chosenSz=el.textContent;
+  document.getElementById('sizeChosen').textContent='— '+el.textContent;
+}
+
+// QTY
+let qty=1;
+function changeQty(d){qty=Math.max(1,Math.min(10,qty+d));document.getElementById('qtyVal').textContent=qty}
+
+// CART
+let cart=0;
+function atc(){
+  if(!chosenSz){
+    document.querySelector('.size-opts').style.outline='1px solid var(--red)';
+    setTimeout(()=>document.querySelector('.size-opts').style.outline='',1500);
+    return;
+  }
+  cart+=qty;
+  document.getElementById('cc').textContent=cart;
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+function buyNow(){if(!chosenSz){selSz(document.querySelector('.sz:not(.out)'));return}atc()}
+
+// WISHLIST
+function toggleWish(){
+  const b=document.getElementById('wlBtn');
+  const on=b.classList.toggle('liked');
+  b.innerHTML=on?'♥ &nbsp;Saved to Wishlist':'♡ &nbsp;Add to Wishlist';
+}
+
+// ACCORDION
+function toggleAcc(i){
+  const item=document.getElementById('acc'+i);
+  const wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.acc-item').forEach(a=>a.classList.remove('open'));
+  if(!wasOpen)item.classList.add('open');
+}
+
+// MODAL
+function openModal(){document.getElementById('sizeModal').classList.add('open')}
+function closeModal(){document.getElementById('sizeModal').classList.remove('open')}
+document.getElementById('sizeModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
+
+// ZOOM
+const mainImg=document.getElementById('mainImg');
+mainImg.addEventListener('mousemove',function(e){
+  const r=this.getBoundingClientRect();
+  const x=(e.clientX-r.left)/r.width*100;
+  const y=(e.clientY-r.top)/r.height*100;
+  this.style.transformOrigin=`${x}% ${y}%`;
+  this.style.transform='scale(1.5)';
+});
+mainImg.addEventListener('mouseleave',function(){this.style.transform='scale(1)';this.style.transformOrigin='center center'});
+
+// ANIMATE REVIEW BARS
+setTimeout(()=>{document.querySelectorAll('.rev-bar-fill').forEach(b=>{const w=b.style.width;b.style.width='0';setTimeout(()=>b.style.width=w,100)})},200);
+</script>
+</body>
+</html>

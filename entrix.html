@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENTRIX — Urban Luxury Streetwear</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#000000;
+  --white:#FFFFFF;
+  --red:#D90429;
+  --red-dark:#a50320;
+  --gray:#111111;
+  --gray2:#1a1a1a;
+  --gray3:#222222;
+  --mid:#888888;
+  --light:#cccccc;
+  --faint:#333333;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+img{display:block;width:100%;object-fit:cover}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+button{cursor:none;border:none;background:none;font-family:inherit}
+
+/* CURSOR */
+#cursor{position:fixed;width:12px;height:12px;background:var(--white);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s,border-radius .2s;mix-blend-mode:difference}
+#cursor.big{width:48px;height:48px}
+#cursor.red{background:var(--red);mix-blend-mode:normal;width:40px;height:40px}
+
+/* LOADER */
+#loader{position:fixed;inset:0;background:var(--black);z-index:9998;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .6s ease}
+#loader.hidden{opacity:0;pointer-events:none}
+.loader-logo{font-family:'Bebas Neue',sans-serif;font-size:72px;letter-spacing:.12em;color:var(--white);opacity:0;animation:loaderFade 1s ease .2s forwards}
+.loader-bar-wrap{width:200px;height:1px;background:var(--faint)}
+.loader-bar{height:1px;background:var(--red);width:0;animation:loaderBar 1.4s cubic-bezier(.77,0,.18,1) .4s forwards}
+@keyframes loaderFade{to{opacity:1}}
+@keyframes loaderBar{to{width:100%}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:72px;transition:background .4s,border-color .4s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(0,0,0,.88);backdrop-filter:blur(16px);border-bottom-color:rgba(255,255,255,.07)}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.16em;color:var(--white);transition:color .2s}
+.nav-logo:hover{color:var(--red)}
+.nav-center{display:flex;gap:36px}
+.nav-center a{font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--light);transition:color .2s;position:relative}
+.nav-center a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--red);transition:width .2s}
+.nav-center a:hover{color:var(--white)}
+.nav-center a:hover::after{width:100%}
+.nav-right{display:flex;align-items:center;gap:24px}
+.nav-icon{font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--light);transition:color .2s;display:flex;align-items:center;gap:6px}
+.nav-icon:hover{color:var(--white)}
+.nav-cart-count{background:var(--red);color:var(--white);font-size:9px;font-weight:600;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:none}
+.hamburger span{display:block;width:24px;height:1px;background:var(--white);transition:all .3s}
+
+/* ANNOUNCEMENT BAR */
+.announce{background:var(--red);text-align:center;padding:10px 16px;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--white)}
+
+/* HERO */
+.hero{height:100vh;position:relative;overflow:hidden;display:flex;align-items:flex-end}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#0a0a0a 0%,#111 40%,#0d0d0d 100%);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-bg::before{content:'ENTRIX';font-family:'Bebas Neue',sans-serif;font-size:clamp(120px,25vw,340px);color:rgba(255,255,255,.03);letter-spacing:.06em;white-space:nowrap;position:absolute;user-select:none}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.3) 50%,rgba(0,0,0,.1) 100%)}
+.hero-grid-overlay{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 80px,rgba(255,255,255,.015) 80px,rgba(255,255,255,.015) 81px),repeating-linear-gradient(90deg,transparent,transparent 80px,rgba(255,255,255,.015) 80px,rgba(255,255,255,.015) 81px);z-index:1}
+.hero-accent-line{position:absolute;top:0;right:120px;width:1px;height:100%;background:linear-gradient(to bottom,transparent,rgba(217,4,41,.4),transparent);z-index:1}
+.hero-content{position:relative;z-index:2;padding:0 48px 80px;width:100%}
+.hero-drop-tag{display:inline-flex;align-items:center;gap:10px;margin-bottom:28px;opacity:0;animation:heroReveal .8s ease .3s forwards}
+.hero-drop-tag span{font-size:10px;font-weight:600;letter-spacing:.35em;text-transform:uppercase;color:var(--red)}
+.hero-drop-tag::before{content:'';display:inline-block;width:28px;height:1px;background:var(--red)}
+.hero-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(64px,12vw,180px);letter-spacing:.04em;line-height:.9;overflow:hidden;margin-bottom:8px}
+.hero-h1-line{display:block;transform:translateY(110%);animation:slideUp .9s cubic-bezier(.16,1,.3,1) forwards}
+.hero-h1-line:nth-child(1){animation-delay:.1s}
+.hero-h1-line:nth-child(2){animation-delay:.18s;color:var(--red)}
+.hero-h1-line:nth-child(3){animation-delay:.26s}
+.hero-sub{font-size:14px;font-weight:300;color:var(--light);letter-spacing:.08em;line-height:1.6;max-width:360px;margin-bottom:40px;opacity:0;animation:heroReveal .8s ease .6s forwards}
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap;opacity:0;animation:heroReveal .8s ease .8s forwards}
+.btn-red{display:inline-flex;align-items:center;gap:10px;padding:16px 40px;background:var(--red);color:var(--white);font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;transition:background .2s,transform .2s}
+.btn-red:hover{background:var(--red-dark);transform:translateY(-2px)}
+.btn-outline{display:inline-flex;align-items:center;gap:10px;padding:15px 40px;border:1px solid rgba(255,255,255,.25);color:var(--white);font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;transition:border-color .2s,transform .2s}
+.btn-outline:hover{border-color:var(--white);transform:translateY(-2px)}
+.hero-scroll-hint{position:absolute;right:48px;bottom:80px;display:flex;flex-direction:column;align-items:center;gap:10px;z-index:2;opacity:0;animation:heroReveal .8s ease 1.1s forwards}
+.hero-scroll-hint span{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--mid);writing-mode:vertical-rl}
+.scroll-dot{width:1px;height:60px;background:var(--faint);position:relative;overflow:hidden}
+.scroll-dot::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--red);animation:scrollDot 2s ease 1.5s infinite}
+@keyframes scrollDot{to{top:100%}}
+
+/* TICKER */
+.ticker{background:var(--gray2);overflow:hidden;border-top:1px solid var(--faint);border-bottom:1px solid var(--faint)}
+.ticker-inner{display:flex;padding:0}
+.ticker-track{display:flex;gap:0;white-space:nowrap;animation:ticker 28s linear infinite}
+.ticker-item{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:.25em;color:rgba(255,255,255,.5);padding:12px 48px}
+.ticker-item.hi{color:var(--red)}
+
+/* SECTION COMMONS */
+.section{padding:100px 48px}
+.section-label{font-size:10px;font-weight:600;letter-spacing:.4em;text-transform:uppercase;color:var(--red);margin-bottom:12px}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(42px,6vw,80px);letter-spacing:.05em;line-height:.95;color:var(--white)}
+.section-title em{font-family:'Playfair Display',serif;font-style:italic;color:var(--white)}
+
+/* FEATURED DROPS */
+.drops-section{background:var(--black);padding:80px 48px}
+.drops-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:60px}
+.link-arrow{font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);display:inline-flex;align-items:center;gap:8px;border-bottom:1px solid var(--faint);padding-bottom:4px;transition:color .2s,border-color .2s}
+.link-arrow:hover{color:var(--white);border-color:var(--white)}
+.drops-grid{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto;gap:2px}
+.drop-card{position:relative;overflow:hidden;background:var(--gray);cursor:none}
+.drop-card.large{grid-column:1;grid-row:1/3}
+.drop-card.medium{grid-column:2}
+.drop-card.small{grid-column:3}
+.drop-card.wide{grid-column:2/4;grid-row:2}
+.drop-img{position:relative;overflow:hidden}
+.drop-card.large .drop-img{height:660px}
+.drop-card.medium .drop-img,.drop-card.small .drop-img{height:320px}
+.drop-card.wide .drop-img{height:320px}
+.drop-img-inner{width:100%;height:100%;background:var(--gray2);display:flex;align-items:center;justify-content:center;transition:transform .7s cubic-bezier(.16,1,.3,1);position:relative}
+.drop-card:hover .drop-img-inner{transform:scale(1.06)}
+.drop-placeholder{font-family:'Bebas Neue',sans-serif;font-size:64px;color:rgba(255,255,255,.04);letter-spacing:.1em;text-align:center;line-height:1;position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.drop-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 60%);z-index:1}
+.drop-hover{position:absolute;inset:0;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;z-index:2;transition:background .3s}
+.drop-card:hover .drop-hover{background:rgba(0,0,0,.3)}
+.quick-view{font-size:10px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--white);border:1px solid rgba(255,255,255,.5);padding:12px 28px;opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s}
+.drop-card:hover .quick-view{opacity:1;transform:translateY(0)}
+.drop-info{padding:16px 20px 20px;position:relative;z-index:3}
+.drop-name{font-size:15px;font-weight:400;letter-spacing:.04em;color:var(--white);margin-bottom:6px}
+.drop-meta{display:flex;justify-content:space-between;align-items:center}
+.drop-cat{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--mid)}
+.drop-price{font-size:15px;font-weight:500;color:var(--white)}
+.drop-badge{position:absolute;top:16px;left:16px;z-index:3;background:var(--red);color:var(--white);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:6px 12px}
+
+/* CATEGORIES */
+.cat-section{background:var(--gray);padding:80px 48px}
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:56px}
+.cat-card{position:relative;overflow:hidden;cursor:none}
+.cat-img{height:360px;background:var(--gray2);display:flex;align-items:center;justify-content:center;transition:transform .6s cubic-bezier(.16,1,.3,1);position:relative}
+.cat-card:hover .cat-img{transform:scale(1.05)}
+.cat-label-wrap{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8) 0%,transparent 55%);display:flex;align-items:flex-end;padding:24px}
+.cat-name{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.1em;color:var(--white)}
+.cat-count{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);margin-top:4px}
+.cat-placeholder{font-family:'Bebas Neue',sans-serif;font-size:48px;color:rgba(255,255,255,.04);letter-spacing:.08em}
+
+/* MARQUEE DIVIDER */
+.marquee-divider{padding:24px 0;background:var(--red);overflow:hidden}
+.marquee-track{display:flex;white-space:nowrap;animation:ticker 18s linear infinite}
+.marquee-item{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.2em;color:rgba(0,0,0,.35);padding:0 40px}
+.marquee-item.white{color:rgba(255,255,255,.9)}
+
+/* EDITORIAL */
+.editorial{background:var(--black);padding:80px 0}
+.editorial-inner{display:grid;grid-template-columns:1fr 1fr;min-height:600px}
+.editorial-visual{background:var(--gray2);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.editorial-visual::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 30px,rgba(255,255,255,.012) 30px,rgba(255,255,255,.012) 31px)}
+.editorial-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,14vw,200px);color:rgba(255,255,255,.04);letter-spacing:.04em;line-height:.9;text-align:center;user-select:none}
+.editorial-content{padding:80px 64px;display:flex;flex-direction:column;justify-content:center}
+.editorial-eyebrow{font-size:10px;font-weight:600;letter-spacing:.4em;text-transform:uppercase;color:var(--red);margin-bottom:24px}
+.editorial-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,5.5vw,72px);letter-spacing:.04em;line-height:.95;color:var(--white);margin-bottom:12px}
+.editorial-title em{font-family:'Playfair Display',serif;font-style:italic}
+.editorial-body{font-size:15px;font-weight:300;color:rgba(255,255,255,.5);line-height:1.85;max-width:400px;margin-bottom:40px}
+.editorial-stats{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:40px}
+.e-stat{border-left:2px solid var(--red);padding-left:16px}
+.e-stat-num{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--white);letter-spacing:.04em;line-height:1}
+.e-stat-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);margin-top:4px}
+
+/* PRODUCTS - BEST SELLERS */
+.products-section{background:var(--gray2);padding:80px 48px}
+.products-tabs{display:flex;gap:0;margin-bottom:48px;border-bottom:1px solid var(--faint)}
+.tab-btn{font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);padding:14px 28px;transition:color .2s;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab-btn.active{color:var(--white);border-bottom-color:var(--red)}
+.tab-btn:hover{color:var(--white)}
+.products-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.prod-card{background:var(--gray);cursor:none;position:relative;overflow:hidden}
+.prod-img{height:360px;background:var(--gray3);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.prod-img-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.prod-card:hover .prod-img-inner{transform:scale(1.05)}
+.prod-placeholder{font-family:'Bebas Neue',sans-serif;font-size:52px;color:rgba(255,255,255,.04);letter-spacing:.1em}
+.prod-actions{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;gap:0;transform:translateY(100%);transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.prod-card:hover .prod-actions{transform:translateY(0)}
+.prod-atc{padding:14px;background:var(--red);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--white);text-align:center;transition:background .2s}
+.prod-atc:hover{background:var(--red-dark)}
+.prod-wishlist{padding:10px;background:rgba(0,0,0,.8);font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--light);text-align:center}
+.prod-info{padding:16px 18px}
+.prod-name{font-size:13px;font-weight:400;letter-spacing:.04em;color:var(--white);margin-bottom:6px}
+.prod-line{display:flex;justify-content:space-between;align-items:center}
+.prod-cat2{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mid)}
+.prod-price2{font-size:14px;font-weight:500;color:var(--white)}
+.prod-badge2{position:absolute;top:12px;left:12px;background:var(--black);color:var(--white);font-size:8px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:5px 10px}
+.prod-badge2.sale{background:var(--red)}
+.prod-swatches{display:flex;gap:6px;padding:0 18px 14px}
+.swatch{width:14px;height:14px;border-radius:50%;border:1px solid transparent;cursor:none;transition:border-color .2s}
+.swatch:hover,.swatch.active{border-color:var(--white)}
+
+/* SIZE SELECTOR (in modal) */
+.sizes{display:flex;gap:8px;flex-wrap:wrap}
+.size-btn{width:44px;height:44px;border:1px solid var(--faint);font-size:12px;font-weight:500;color:var(--mid);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.size-btn:hover,.size-btn.active{border-color:var(--white);color:var(--white)}
+.size-btn.out{opacity:.3;pointer-events:none;text-decoration:line-through}
+
+/* REVIEWS */
+.reviews-section{background:var(--black);padding:80px 48px}
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px}
+.review-card{background:var(--gray);padding:32px;border:1px solid var(--faint);transition:border-color .3s}
+.review-card:hover{border-color:rgba(217,4,41,.3)}
+.review-stars{display:flex;gap:4px;margin-bottom:16px}
+.star{color:var(--red);font-size:14px}
+.review-text{font-size:14px;font-weight:300;line-height:1.8;color:rgba(255,255,255,.65);margin-bottom:20px;font-style:italic}
+.review-author{display:flex;align-items:center;gap:12px}
+.review-avatar{width:40px;height:40px;border-radius:50%;background:var(--gray3);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--white)}
+.review-name{font-size:13px;font-weight:500;letter-spacing:.04em;color:var(--white)}
+.review-tag{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--red);margin-top:2px}
+
+/* NEWSLETTER */
+.newsletter{background:var(--gray);padding:80px 48px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.nl-left .section-label{margin-bottom:16px}
+.nl-left .section-title{font-size:clamp(40px,5.5vw,72px);margin-bottom:16px}
+.nl-left p{font-size:14px;font-weight:300;color:rgba(255,255,255,.45);line-height:1.7}
+.nl-form{display:flex;flex-direction:column;gap:12px}
+.nl-input{padding:16px 24px;background:var(--black);border:1px solid var(--faint);color:var(--white);font-family:'Barlow',sans-serif;font-size:13px;letter-spacing:.04em;outline:none;transition:border-color .2s}
+.nl-input::placeholder{color:var(--mid)}
+.nl-input:focus{border-color:var(--red)}
+.nl-perks{display:flex;gap:20px;margin-top:8px;flex-wrap:wrap}
+.nl-perk{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);display:flex;align-items:center;gap:6px}
+.nl-perk::before{content:'✓';color:var(--red)}
+
+/* LOOKBOOK STRIP */
+.lookbook-strip{background:var(--black);padding:80px 48px}
+.lb-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;margin-top:48px}
+.lb-item{aspect-ratio:.75;background:var(--gray2);display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:none;position:relative}
+.lb-img-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.lb-item:hover .lb-img-inner{transform:scale(1.08)}
+.lb-label{font-family:'Bebas Neue',sans-serif;font-size:40px;color:rgba(255,255,255,.04);letter-spacing:.1em}
+.lb-overlay{position:absolute;inset:0;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;transition:background .3s}
+.lb-item:hover .lb-overlay{background:rgba(217,4,41,.2)}
+.lb-plus{font-size:28px;color:var(--white);opacity:0;transition:opacity .3s}
+.lb-item:hover .lb-plus{opacity:1}
+
+/* FOOTER */
+footer{background:var(--gray2);border-top:1px solid var(--faint)}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;padding:64px 48px 40px}
+.footer-brand-text{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:.14em;color:var(--white);display:block;margin-bottom:16px}
+.footer-tagline{font-size:13px;font-weight:300;color:rgba(255,255,255,.35);line-height:1.7;max-width:220px;margin-bottom:24px}
+.footer-social{display:flex;gap:12px}
+.social-btn{width:36px;height:36px;border:1px solid var(--faint);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--mid);transition:all .2s}
+.social-btn:hover{border-color:var(--red);color:var(--red)}
+.footer-col h4{font-size:10px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--white);margin-bottom:20px}
+.footer-col ul{display:flex;flex-direction:column;gap:10px}
+.footer-col ul a{font-size:13px;font-weight:300;color:rgba(255,255,255,.4);transition:color .2s}
+.footer-col ul a:hover{color:var(--white)}
+.footer-bottom{padding:20px 48px;border-top:1px solid var(--faint);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-copy{font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.2)}
+.footer-legal{display:flex;gap:24px}
+.footer-legal a{font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.2);transition:color .2s}
+.footer-legal a:hover{color:var(--white)}
+
+/* MOBILE MENU */
+.mobile-menu{position:fixed;inset:0;background:var(--black);z-index:400;display:flex;flex-direction:column;justify-content:center;padding:48px;transform:translateX(100%);transition:transform .5s cubic-bezier(.77,0,.18,1)}
+.mobile-menu.open{transform:translateX(0)}
+.mobile-menu .m-logo{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:.14em;margin-bottom:48px;color:var(--white)}
+.mobile-links{display:flex;flex-direction:column;gap:4px}
+.mobile-links a{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,8vw,56px);letter-spacing:.06em;color:rgba(255,255,255,.15);transition:color .2s}
+.mobile-links a:hover{color:var(--white)}
+.mobile-close{position:absolute;top:32px;right:48px;font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--mid)}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:none}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+
+/* ANIMATIONS */
+@keyframes slideUp{to{transform:translateY(0)}}
+@keyframes heroReveal{to{opacity:1}}
+@keyframes ticker{to{transform:translateX(-50%)}}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .drops-grid{grid-template-columns:1fr 1fr}
+  .drop-card.large{grid-column:1/3;grid-row:1}.drop-card.medium{grid-column:1;grid-row:2}.drop-card.small{grid-column:2;grid-row:2}.drop-card.wide{grid-column:1/3;grid-row:3}
+  .products-grid{grid-template-columns:repeat(2,1fr)}
+  .cat-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-top{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  nav{padding:0 24px}
+  .nav-center{display:none}
+  .hamburger{display:flex}
+  .section,.drops-section,.cat-section,.products-section,.reviews-section,.lookbook-strip,.newsletter,.editorial-content{padding-left:24px;padding-right:24px}
+  .editorial{grid-template-columns:1fr}.editorial-visual{display:none}
+  .newsletter{grid-template-columns:1fr;padding:60px 24px}
+  .hero-content{padding:0 24px 60px}
+  .reviews-grid{grid-template-columns:1fr}
+  .lb-grid{grid-template-columns:repeat(3,1fr)}
+  .footer-top{grid-template-columns:1fr;padding:40px 24px}
+  .footer-bottom{padding:20px 24px}
+  .drops-grid{grid-template-columns:1fr}
+  .drop-card.large,.drop-card.medium,.drop-card.small,.drop-card.wide{grid-column:1;grid-row:auto}
+  .cat-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">ENTRIX</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <span class="mobile-close" id="menuClose">✕ Close</span>
+  <div class="m-logo">ENTRIX</div>
+  <nav class="mobile-links">
+    <a href="#drops">Shop</a>
+    <a href="#categories">Categories</a>
+    <a href="#editorial">Our Story</a>
+    <a href="#lookbook">Lookbook</a>
+    <a href="#newsletter">Contact</a>
+  </nav>
+</div>
+
+<!-- ANNOUNCEMENT -->
+<div class="announce">⚡ Free Shipping on orders above ₹4,999 &nbsp;·&nbsp; New Drop: The AXIS Collection is live</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo">ENTRIX</a>
+  <div class="nav-center">
+    <a href="#drops">New Drops</a>
+    <a href="#categories">Categories</a>
+    <a href="#bestsellers">Best Sellers</a>
+    <a href="#editorial">About</a>
+    <a href="#lookbook">Lookbook</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-icon">Search</span>
+    <span class="nav-icon">Wishlist</span>
+    <span class="nav-icon">Bag <span class="nav-cart-count">0</span></span>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-grid-overlay"></div>
+    <div class="hero-accent-line"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-drop-tag"><span>The Axis Drop — SS'25</span></div>
+    <h1 class="hero-h1">
+      <span class="hero-h1-line">DEFINE</span>
+      <span class="hero-h1-line">YOUR</span>
+      <span class="hero-h1-line">EDGE</span>
+    </h1>
+    <p class="hero-sub">Premium streetwear engineered for those who occupy the space between luxury and culture. Precision cut. Uncompromisingly yours.</p>
+    <div class="hero-actions">
+      <a href="#drops" class="btn-red">Shop the Drop →</a>
+      <a href="#lookbook" class="btn-outline">View Lookbook</a>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-dot"></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <div class="ticker-track">
+      <span class="ticker-item">ENTRIX</span>
+      <span class="ticker-item hi">— SS 2025 —</span>
+      <span class="ticker-item">DEFINE YOUR EDGE</span>
+      <span class="ticker-item hi">— NEW DROP LIVE —</span>
+      <span class="ticker-item">PREMIUM STREETWEAR</span>
+      <span class="ticker-item hi">— LIMITED EDITION —</span>
+      <span class="ticker-item">FREE SHIPPING ₹4999+</span>
+      <span class="ticker-item hi">— URBAN LUXURY —</span>
+      <span class="ticker-item">ENTRIX</span>
+      <span class="ticker-item hi">— SS 2025 —</span>
+      <span class="ticker-item">DEFINE YOUR EDGE</span>
+      <span class="ticker-item hi">— NEW DROP LIVE —</span>
+      <span class="ticker-item">PREMIUM STREETWEAR</span>
+      <span class="ticker-item hi">— LIMITED EDITION —</span>
+      <span class="ticker-item">FREE SHIPPING ₹4999+</span>
+      <span class="ticker-item hi">— URBAN LUXURY —</span>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURED DROPS -->
+<section class="drops-section" id="drops">
+  <div class="drops-header reveal">
+    <div>
+      <p class="section-label">New Arrivals</p>
+      <h2 class="section-title">The AXIS <em>Drop</em></h2>
+    </div>
+    <a href="#" class="link-arrow">View Full Collection →</a>
+  </div>
+  <div class="drops-grid reveal">
+
+    <div class="drop-card large">
+      <div class="drop-img">
+        <div class="drop-img-inner">
+          <div class="drop-placeholder">01<br>AXIS</div>
+        </div>
+        <div class="drop-overlay"></div>
+        <div class="drop-hover"><div class="quick-view">Quick View</div></div>
+      </div>
+      <div class="drop-badge">Drop of the Week</div>
+      <div class="drop-info">
+        <p class="drop-name">Axis Oversized Jacket — Onyx</p>
+        <div class="drop-meta">
+          <span class="drop-cat">Outerwear</span>
+          <span class="drop-price">₹8,999</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="drop-card medium">
+      <div class="drop-img">
+        <div class="drop-img-inner">
+          <div class="drop-placeholder">02</div>
+        </div>
+        <div class="drop-overlay"></div>
+        <div class="drop-hover"><div class="quick-view">Quick View</div></div>
+      </div>
+      <div class="drop-badge sale">Limited</div>
+      <div class="drop-info">
+        <p class="drop-name">Void Cargo Trousers</p>
+        <div class="drop-meta">
+          <span class="drop-cat">Bottoms</span>
+          <span class="drop-price">₹5,499</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="drop-card small">
+      <div class="drop-img">
+        <div class="drop-img-inner">
+          <div class="drop-placeholder">03</div>
+        </div>
+        <div class="drop-overlay"></div>
+        <div class="drop-hover"><div class="quick-view">Quick View</div></div>
+      </div>
+      <div class="drop-info">
+        <p class="drop-name">Signal Graphic Tee</p>
+        <div class="drop-meta">
+          <span class="drop-cat">Tops</span>
+          <span class="drop-price">₹2,799</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="drop-card wide">
+      <div class="drop-img">
+        <div class="drop-img-inner">
+          <div class="drop-placeholder">04 — CORE HOODIE</div>
+        </div>
+        <div class="drop-overlay"></div>
+        <div class="drop-hover"><div class="quick-view">Quick View</div></div>
+      </div>
+      <div class="drop-badge">New</div>
+      <div class="drop-info">
+        <p class="drop-name">Entrix Heavyweight Pullover Hoodie</p>
+        <div class="drop-meta">
+          <span class="drop-cat">Hoodies</span>
+          <span class="drop-price">₹4,799</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="cat-section" id="categories">
+  <div class="reveal">
+    <p class="section-label">Shop by Category</p>
+    <h2 class="section-title">Every <em>Piece</em></h2>
+  </div>
+  <div class="cat-grid reveal">
+    <div class="cat-card">
+      <div class="cat-img">
+        <div class="cat-placeholder">TEE</div>
+        <div class="cat-label-wrap">
+          <div><p class="cat-name">Oversized Tees</p><p class="cat-count">24 Products</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-img">
+        <div class="cat-placeholder">HOOD</div>
+        <div class="cat-label-wrap">
+          <div><p class="cat-name">Hoodies</p><p class="cat-count">18 Products</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-img">
+        <div class="cat-placeholder">CARGO</div>
+        <div class="cat-label-wrap">
+          <div><p class="cat-name">Cargo Pants</p><p class="cat-count">16 Products</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-img">
+        <div class="cat-placeholder">JKT</div>
+        <div class="cat-label-wrap">
+          <div><p class="cat-name">Jackets</p><p class="cat-count">12 Products</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-img">
+        <div class="cat-placeholder">COORD</div>
+        <div class="cat-label-wrap">
+          <div><p class="cat-name">Co-ord Sets</p><p class="cat-count">10 Products</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-img">
+        <div class="cat-placeholder">ACC</div>
+        <div class="cat-label-wrap">
+          <div><p class="cat-name">Accessories</p><p class="cat-count">30 Products</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-img">
+        <div class="cat-placeholder">SWT</div>
+        <div class="cat-label-wrap">
+          <div><p class="cat-name">Sweatshirts</p><p class="cat-count">14 Products</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-img">
+        <div class="cat-placeholder">SNK</div>
+        <div class="cat-label-wrap">
+          <div><p class="cat-name">Sneakers</p><p class="cat-count">8 Products</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RED MARQUEE DIVIDER -->
+<div class="marquee-divider">
+  <div class="marquee-track">
+    <span class="marquee-item">ENTRIX</span>
+    <span class="marquee-item white">★</span>
+    <span class="marquee-item">STREET. STRUCTURE. SILENCE.</span>
+    <span class="marquee-item white">★</span>
+    <span class="marquee-item">DEFINE YOUR EDGE</span>
+    <span class="marquee-item white">★</span>
+    <span class="marquee-item">URBAN LUXURY</span>
+    <span class="marquee-item white">★</span>
+    <span class="marquee-item">ENTRIX</span>
+    <span class="marquee-item white">★</span>
+    <span class="marquee-item">STREET. STRUCTURE. SILENCE.</span>
+    <span class="marquee-item white">★</span>
+    <span class="marquee-item">DEFINE YOUR EDGE</span>
+    <span class="marquee-item white">★</span>
+    <span class="marquee-item">URBAN LUXURY</span>
+    <span class="marquee-item white">★</span>
+  </div>
+</div>
+
+<!-- BEST SELLERS -->
+<section class="products-section" id="bestsellers">
+  <div class="reveal">
+    <p class="section-label">Fan Favourites</p>
+    <h2 class="section-title">Best <em>Sellers</em></h2>
+  </div>
+  <div class="products-tabs reveal">
+    <button class="tab-btn active" onclick="setTab(this)">All</button>
+    <button class="tab-btn" onclick="setTab(this)">Tops</button>
+    <button class="tab-btn" onclick="setTab(this)">Bottoms</button>
+    <button class="tab-btn" onclick="setTab(this)">Outerwear</button>
+  </div>
+  <div class="products-grid reveal">
+
+    <div class="prod-card">
+      <div class="prod-img">
+        <div class="prod-img-inner"><div class="prod-placeholder">01</div></div>
+        <div class="prod-actions">
+          <button class="prod-atc" onclick="addToCart(this)">Add to Cart</button>
+          <div class="prod-wishlist">♡ Wishlist</div>
+        </div>
+      </div>
+      <div class="prod-badge2 sale">Best Seller</div>
+      <div class="prod-swatches">
+        <div class="swatch active" style="background:#111"></div>
+        <div class="swatch" style="background:#f5f2ed"></div>
+        <div class="swatch" style="background:#D90429"></div>
+      </div>
+      <div class="prod-info">
+        <p class="prod-name">Core Graphic Tee — Vol. 3</p>
+        <div class="prod-line">
+          <span class="prod-cat2">Tops</span>
+          <span class="prod-price2">₹2,499</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="prod-card">
+      <div class="prod-img">
+        <div class="prod-img-inner"><div class="prod-placeholder">02</div></div>
+        <div class="prod-actions">
+          <button class="prod-atc" onclick="addToCart(this)">Add to Cart</button>
+          <div class="prod-wishlist">♡ Wishlist</div>
+        </div>
+      </div>
+      <div class="prod-badge2">New</div>
+      <div class="prod-swatches">
+        <div class="swatch active" style="background:#111"></div>
+        <div class="swatch" style="background:#3a3a3a"></div>
+      </div>
+      <div class="prod-info">
+        <p class="prod-name">Signal Heavyweight Hoodie</p>
+        <div class="prod-line">
+          <span class="prod-cat2">Hoodies</span>
+          <span class="prod-price2">₹4,799</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="prod-card">
+      <div class="prod-img">
+        <div class="prod-img-inner"><div class="prod-placeholder">03</div></div>
+        <div class="prod-actions">
+          <button class="prod-atc" onclick="addToCart(this)">Add to Cart</button>
+          <div class="prod-wishlist">♡ Wishlist</div>
+        </div>
+      </div>
+      <div class="prod-badge2 sale">Limited</div>
+      <div class="prod-swatches">
+        <div class="swatch active" style="background:#111"></div>
+        <div class="swatch" style="background:#1a3a1a"></div>
+      </div>
+      <div class="prod-info">
+        <p class="prod-name">Utility Cargo Trousers</p>
+        <div class="prod-line">
+          <span class="prod-cat2">Bottoms</span>
+          <span class="prod-price2">₹5,499</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="prod-card">
+      <div class="prod-img">
+        <div class="prod-img-inner"><div class="prod-placeholder">04</div></div>
+        <div class="prod-actions">
+          <button class="prod-atc" onclick="addToCart(this)">Add to Cart</button>
+          <div class="prod-wishlist">♡ Wishlist</div>
+        </div>
+      </div>
+      <div class="prod-swatches">
+        <div class="swatch active" style="background:#111"></div>
+        <div class="swatch" style="background:#f5f2ed"></div>
+      </div>
+      <div class="prod-info">
+        <p class="prod-name">Minimal Co-ord Set</p>
+        <div class="prod-line">
+          <span class="prod-cat2">Sets</span>
+          <span class="prod-price2">₹7,299</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EDITORIAL / ABOUT -->
+<section class="editorial" id="editorial">
+  <div class="editorial-visual">
+    <div class="editorial-big">ENT<br>RIX</div>
+  </div>
+  <div class="editorial-content reveal">
+    <p class="editorial-eyebrow">Our Philosophy</p>
+    <h2 class="editorial-title">Built for the<br><em>In-Between</em></h2>
+    <p class="editorial-body">Entrix was born from the tension between two worlds — luxury's precision and street culture's raw energy. We don't pick a side. We occupy the space where both collide. Every stitch is deliberate. Every silhouette is studied. We make clothes for people who refuse to be defined by a single aesthetic.</p>
+    <div class="editorial-stats">
+      <div class="e-stat">
+        <div class="e-stat-num">48</div>
+        <div class="e-stat-label">Pieces per season</div>
+      </div>
+      <div class="e-stat">
+        <div class="e-stat-num">100%</div>
+        <div class="e-stat-label">Premium materials</div>
+      </div>
+      <div class="e-stat">
+        <div class="e-stat-num">Zero</div>
+        <div class="e-stat-label">Compromises made</div>
+      </div>
+      <div class="e-stat">
+        <div class="e-stat-num">2025</div>
+        <div class="e-stat-label">Founded</div>
+      </div>
+    </div>
+    <a href="#" class="btn-red" style="align-self:flex-start">Read Our Story →</a>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section">
+  <div class="reveal">
+    <p class="section-label">Social Proof</p>
+    <h2 class="section-title">What They <em>Say</em></h2>
+  </div>
+  <div class="reviews-grid reveal">
+    <div class="review-card">
+      <div class="review-stars">
+        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+      </div>
+      <p class="review-text">"The Axis Jacket is everything. The quality is on par with Fear of God but at a price that actually makes sense. First time I've felt genuinely styled head to toe."</p>
+      <div class="review-author">
+        <div class="review-avatar">AR</div>
+        <div>
+          <p class="review-name">Aryan R.</p>
+          <p class="review-tag">Verified Buyer</p>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">
+        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+      </div>
+      <p class="review-text">"Bought the Cargo set and the Core Tee — the fabric weight is insane. This isn't fast fashion. You can feel the difference immediately. Entrix has me for life."</p>
+      <div class="review-author">
+        <div class="review-avatar">KP</div>
+        <div>
+          <p class="review-name">Krish P.</p>
+          <p class="review-tag">Verified Buyer</p>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">
+        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+      </div>
+      <p class="review-text">"The branding alone is next level. But the clothes back it up — minimal, clean, heavy. I've been looking for an Indian streetwear brand that actually delivers. Found it."</p>
+      <div class="review-author">
+        <div class="review-avatar">SM</div>
+        <div>
+          <p class="review-name">Sneha M.</p>
+          <p class="review-tag">Verified Buyer</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOOKBOOK -->
+<section class="lookbook-strip" id="lookbook">
+  <div class="reveal">
+    <p class="section-label">Editorial</p>
+    <h2 class="section-title">The <em>Lookbook</em></h2>
+  </div>
+  <div class="lb-grid reveal">
+    <div class="lb-item">
+      <div class="lb-img-inner"><div class="lb-label">L1</div></div>
+      <div class="lb-overlay"><div class="lb-plus">+</div></div>
+    </div>
+    <div class="lb-item">
+      <div class="lb-img-inner"><div class="lb-label">L2</div></div>
+      <div class="lb-overlay"><div class="lb-plus">+</div></div>
+    </div>
+    <div class="lb-item">
+      <div class="lb-img-inner"><div class="lb-label">L3</div></div>
+      <div class="lb-overlay"><div class="lb-plus">+</div></div>
+    </div>
+    <div class="lb-item">
+      <div class="lb-img-inner"><div class="lb-label">L4</div></div>
+      <div class="lb-overlay"><div class="lb-plus">+</div></div>
+    </div>
+    <div class="lb-item">
+      <div class="lb-img-inner"><div class="lb-label">L5</div></div>
+      <div class="lb-overlay"><div class="lb-plus">+</div></div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:40px">
+    <a href="#" class="btn-outline">View Full Lookbook →</a>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter" id="newsletter">
+  <div class="nl-left reveal">
+    <p class="section-label">Stay in the Loop</p>
+    <h2 class="section-title">FIRST<br>TO <em>Know</em></h2>
+    <p>Drop alerts, exclusive early access, behind-the-scenes — and nothing you didn't sign up for. No spam. Ever.</p>
+  </div>
+  <div class="reveal reveal-delay-2">
+    <div class="nl-form">
+      <input type="text" class="nl-input" placeholder="First name">
+      <input type="email" class="nl-input" id="nlEmail" placeholder="Email address">
+      <button class="btn-red" id="nlBtn" onclick="handleNewsletter()" style="align-self:flex-start">Get Early Access →</button>
+    </div>
+    <div class="nl-perks" style="margin-top:20px">
+      <span class="nl-perk">Early drop access</span>
+      <span class="nl-perk">Exclusive discounts</span>
+      <span class="nl-perk">No spam</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <a href="#" class="footer-brand-text">ENTRIX</a>
+      <p class="footer-tagline">Premium urban streetwear from the in-between. Built differently. Worn intentionally.</p>
+      <div class="footer-social">
+        <a href="#" class="social-btn">IG</a>
+        <a href="#" class="social-btn">TW</a>
+        <a href="#" class="social-btn">YT</a>
+        <a href="#" class="social-btn">TK</a>
+        <a href="#" class="social-btn">LI</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#">New Arrivals</a></li>
+        <li><a href="#">Oversized Tees</a></li>
+        <li><a href="#">Hoodies</a></li>
+        <li><a href="#">Cargo Pants</a></li>
+        <li><a href="#">Jackets</a></li>
+        <li><a href="#">Co-ord Sets</a></li>
+        <li><a href="#">Accessories</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Brand</h4>
+      <ul>
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Lookbook</a></li>
+        <li><a href="#">Collaborations</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Size Guide</a></li>
+        <li><a href="#">Shipping Policy</a></li>
+        <li><a href="#">Returns & Refunds</a></li>
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">FAQs</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2025 Entrix. All rights reserved. Made in India.</p>
+    <div class="footer-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms & Conditions</a>
+      <a href="#">Cookie Policy</a>
+      <a href="#">Disclaimer</a>
+    </div>
+  </div>
+</footer>
+
+<!-- CART TOAST -->
+<div id="cartToast" style="position:fixed;bottom:32px;right:32px;background:var(--white);color:var(--black);padding:16px 28px;font-size:12px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;z-index:800;transform:translateY(100px);opacity:0;transition:all .4s cubic-bezier(.16,1,.3,1)">
+  ✓ Added to Bag
+</div>
+
+<script>
+// LOADER
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const loader = document.getElementById('loader');
+    loader.classList.add('hidden');
+    setTimeout(() => loader.remove(), 700);
+  }, 1600);
+});
+
+// CURSOR
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a, button, .prod-card, .drop-card, .cat-card, .lb-item').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+});
+document.querySelectorAll('.btn-red').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.classList.remove('big'); cursor.classList.add('red'); });
+  el.addEventListener('mouseleave', () => cursor.classList.remove('red'));
+});
+
+// NAV SCROLL
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// MOBILE MENU
+document.getElementById('hamburger').addEventListener('click', () => {
+  document.getElementById('mobileMenu').classList.add('open');
+});
+document.getElementById('menuClose').addEventListener('click', () => {
+  document.getElementById('mobileMenu').classList.remove('open');
+});
+document.querySelectorAll('.mobile-links a').forEach(a => {
+  a.addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open'));
+});
+
+// REVEAL ON SCROLL
+const revealEls = document.querySelectorAll('.reveal');
+const revealIO = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.1 });
+revealEls.forEach(el => revealIO.observe(el));
+
+// TABS
+function setTab(btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// CART
+let cartCount = 0;
+function addToCart(btn) {
+  cartCount++;
+  document.querySelector('.nav-cart-count').textContent = cartCount;
+  const toast = document.getElementById('cartToast');
+  toast.style.transform = 'translateY(0)';
+  toast.style.opacity = '1';
+  setTimeout(() => { toast.style.transform = 'translateY(100px)'; toast.style.opacity = '0'; }, 2200);
+}
+
+// NEWSLETTER
+function handleNewsletter() {
+  const email = document.getElementById('nlEmail');
+  const btn = document.getElementById('nlBtn');
+  if(email.value && email.value.includes('@')) {
+    btn.textContent = '✓ You\'re in!';
+    btn.style.background = '#1a1a1a';
+    email.value = '';
+    email.placeholder = 'Welcome to Entrix.';
+  } else {
+    email.style.borderColor = 'var(--red)';
+    setTimeout(() => email.style.borderColor = '', 1500);
+  }
+}
+
+// SWATCHES
+document.querySelectorAll('.swatch').forEach(s => {
+  s.addEventListener('click', () => {
+    s.closest('.prod-swatches').querySelectorAll('.swatch').forEach(x => x.classList.remove('active'));
+    s.classList.add('active');
+  });
+});
+
+// SMOOTH PARALLAX on hero
+window.addEventListener('scroll', () => {
+  const hero = document.querySelector('.hero-bg');
+  if(hero) hero.style.transform = `translateY(${window.scrollY * 0.3}px)`;
+});
+</script>
+
+</body>
+</html>
